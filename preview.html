@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="tr" class="dark scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Metin | Computer Engineering Student & Athlete</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            dark: { 950: '#040406', 900: '#090710', 800: '#140f24' },
+            crimson: { 500: '#f43f5e', 600: '#e11d48', 900: '#4c0519' }
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['Fira Code', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@400;600;700;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+  
+  <!-- React & ReactDOM CDN -->
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  
+  <!-- Babel CDN for JSX -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    body {
+      background-color: #040407;
+      color: #f4f4f5;
+      font-family: 'Inter', sans-serif;
+    }
+    .glass-card-dark {
+      background: rgba(12, 9, 20, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(168, 85, 247, 0.2);
+      box-shadow: 0 10px 35px 0 rgba(0, 0, 0, 0.7);
+    }
+    .glass-card-dark-hover {
+      transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .glass-card-dark-hover:hover {
+      border-color: rgba(225, 29, 72, 0.5);
+      box-shadow: 0 14px 45px -10px rgba(225, 29, 72, 0.3), 0 0 25px rgba(168, 85, 247, 0.2);
+      transform: translateY(-3px);
+    }
+    .bg-grid-purple {
+      background-size: 36px 36px;
+      background-image: 
+        linear-gradient(to right, rgba(168, 85, 247, 0.06) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(225, 29, 72, 0.05) 1px, transparent 1px);
+    }
+    @keyframes wave {
+      0%, 100% { height: 15%; }
+      50% { height: 100%; }
+    }
+    .wave-bar-red {
+      animation: wave 0.8s ease-in-out infinite;
+    }
+    .wave-bar-purple {
+      animation: wave 1.1s ease-in-out infinite;
+    }
+  </style>
+</head>
+<body class="bg-[#040407] text-zinc-100 selection:bg-red-600 selection:text-white antialiased overflow-x-hidden pb-12">
+
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    function App() {
+      const [selectedGame, setSelectedGame] = useState('valorant');
+      const [isPlaying, setIsPlaying] = useState(true);
+      const [copied, setCopied] = useState(false);
+      const [trackProgress, setTrackProgress] = useState(48);
+
+      useEffect(() => {
+        if (window.lucide) {
+          window.lucide.createIcons();
+        }
+      });
+
+      useEffect(() => {
+        let interval;
+        if (isPlaying) {
+          interval = setInterval(() => {
+            setTrackProgress(prev => (prev >= 230 ? 0 : prev + 1));
+          }, 1000);
+        }
+        return () => clearInterval(interval);
+      }, [isPlaying]);
+
+      const handleCopyEmail = () => {
+        navigator.clipboard.writeText("metin.compeng@selcuk.edu.tr");
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      };
+
+      const games = {
+        valorant: {
+          name: 'Valorant',
+          rank: 'Radiant / Immortal 3',
+          main: 'Jett / Fade',
+          winrate: 66.2,
+          kd: '1.38',
+          hs: '28.4%',
+          badgeColor: 'bg-red-950 text-red-400 border-red-500/40',
+          feed: 'METIN ACE ON HAVEN • MATCH WIN'
+        },
+        r6: {
+          name: 'Rainbow Six Siege',
+          rank: 'Champion / Diamond I',
+          main: 'Ash / Jäger',
+          winrate: 62.8,
+          kd: '1.45',
+          hs: '54.1%',
+          badgeColor: 'bg-amber-950 text-amber-400 border-amber-500/40',
+          feed: 'METIN CLUTCH 1v3 ON BANK • MVP'
+        },
+        rocket: {
+          name: 'Rocket League',
+          rank: 'Grand Champion II',
+          main: 'Octane / Fennec',
+          winrate: 68.5,
+          kd: '1,680 MMR',
+          hs: '88.5%',
+          badgeColor: 'bg-purple-950 text-purple-400 border-purple-500/40',
+          feed: 'METIN OVERTIME GOAL • TOURNAMENT WINNER'
+        }
+      };
+
+      const currentGame = games[selectedGame];
+
+      return (
+        <div className="min-h-screen relative">
+          <div className="fixed inset-0 bg-grid-purple pointer-events-none opacity-50"></div>
+          <div className="fixed top-0 left-1/4 w-[650px] h-[650px] bg-red-900/15 rounded-full blur-[150px] pointer-events-none"></div>
+          <div className="fixed bottom-0 right-1/4 w-[650px] h-[650px] bg-purple-900/15 rounded-full blur-[150px] pointer-events-none"></div>
+
+          <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 pt-6">
+            
+            {/* Header / Navbar */}
+            <header className="sticky top-4 z-50 mb-8">
+              <div className="glass-card-dark rounded-2xl px-5 py-3.5 flex items-center justify-between shadow-2xl bg-black/90 border border-purple-900/30">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-red-600 via-rose-600 to-purple-600 p-[1.5px] flex items-center justify-center shadow-lg shadow-red-600/30">
+                    <div className="w-full h-full bg-[#08050e] rounded-[10px] flex items-center justify-center font-black text-transparent bg-clip-text bg-gradient-to-r from-red-500 via-rose-400 to-purple-400 text-xl">
+                      M
+                    </div>
+                  </div>
+                  <div>
+                    <h1 className="font-black text-white text-base flex items-center gap-2">
+                      Metin <span className="text-xs px-2.5 py-0.5 rounded-full bg-red-950/80 text-red-400 border border-red-500/40 font-mono">AGY Dev & Athlete</span>
+                    </h1>
+                    <p className="text-xs text-purple-300/70 hidden sm:block font-medium">Selçuk Üniversitesi • Bilgisayar Mühendisliği</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="hidden md:flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-red-950/60 border border-red-500/30 text-rose-300 text-xs font-mono font-medium">
+                    <span className="w-2 h-2 rounded-full bg-red-500 animate-ping"></span>
+                    SYS_ONLINE: Aktif & Kodluyor
+                  </div>
+                  <a href="#contact" className="px-4.5 py-2 rounded-xl bg-gradient-to-r from-red-600 via-rose-600 to-purple-600 hover:from-red-500 hover:to-purple-500 text-white text-xs font-bold shadow-lg shadow-red-600/40 flex items-center gap-1.5">
+                    <i data-lucide="sparkles" class="w-4 h-4"></i> İletişime Geç
+                  </a>
+                </div>
+              </div>
+            </header>
+
+            {/* Bento Grid Layout */}
+            <main className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+
+              {/* 1. HERO SECTION */}
+              <div className="col-span-1 md:col-span-3 lg:col-span-4 glass-card-dark glass-card-dark-hover rounded-3xl p-6 sm:p-8 relative overflow-hidden">
+                <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                  <div className="lg:col-span-8 space-y-4">
+                    <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-red-950/70 border border-red-500/40 text-xs font-mono text-red-400 shadow-md">
+                      <i data-lucide="terminal" class="w-3.5 h-3.5 text-red-500"></i> sys.init("Metin_BlackCrimson_Core_v2")
+                    </div>
+                    <h1 className="text-3xl sm:text-5xl font-black text-white leading-tight">
+                      Merhaba, ben <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-500 via-rose-400 to-purple-400">Metin</span> 🔥
+                    </h1>
+                    <p className="text-lg font-bold text-zinc-200">
+                      <span className="text-red-500">Computer Engineering Student</span> & <span className="text-purple-400">Licensed Athlete</span>
+                    </p>
+                    <p className="text-zinc-300 text-sm sm:text-base leading-relaxed">
+                      <strong className="text-white">Selçuk Üniversitesi Bilgisayar Mühendisliği</strong> öğrencisiyim. Modern web sistemleri, yüksek performanslı algoritmalar ve <span className="text-red-400 font-bold underline decoration-purple-500">Antigravity AI</span> teknolojileri üzerine odaklanıyorum. Aynı zamanda liglerde aktif voleybol oynayan lisanslı bir sporcuyum.
+                    </p>
+                    <div className="flex flex-wrap gap-2.5 pt-2">
+                      <span className="px-3.5 py-1.5 rounded-xl bg-purple-950/70 border border-purple-700/50 text-purple-300 text-xs font-semibold">🎓 Selçuk Üniversitesi</span>
+                      <span className="px-3.5 py-1.5 rounded-xl bg-red-950/70 border border-red-700/50 text-red-300 text-xs font-semibold">💻 Bilgisayar Mühendisliği</span>
+                      <span className="px-3.5 py-1.5 rounded-xl bg-rose-950/70 border border-rose-700/50 text-rose-300 text-xs font-semibold">🚀 Antigravity AI Stack</span>
+                      <span className="px-3.5 py-1.5 rounded-xl bg-amber-950/70 border border-amber-700/50 text-amber-300 text-xs font-semibold">🏐 Lisanslı Voleybolcu</span>
+                    </div>
+                  </div>
+
+                  <div className="lg:col-span-4 grid grid-cols-2 gap-3">
+                    <div className="p-4 rounded-2xl bg-black/90 border border-purple-900/40">
+                      <div className="text-zinc-400 text-xs font-mono mb-1">Eğitim</div>
+                      <div className="text-2xl font-black text-white font-mono">3. Sınıf</div>
+                      <div className="text-[11px] text-purple-400 mt-1 font-semibold">Selçuk Üni</div>
+                    </div>
+                    <div className="p-4 rounded-2xl bg-black/90 border border-red-900/40">
+                      <div className="text-zinc-400 text-xs font-mono mb-1">Voleybol</div>
+                      <div className="text-2xl font-black text-red-500 font-mono">150+</div>
+                      <div className="text-[11px] text-rose-300 mt-1 font-semibold">Lisanslı Maç</div>
+                    </div>
+                    <div className="p-4 rounded-2xl bg-black/90 border border-rose-900/40">
+                      <div className="text-zinc-400 text-xs font-mono mb-1">Gaming</div>
+                      <div className="text-2xl font-black text-rose-400 font-mono">Top %1</div>
+                      <div className="text-[11px] text-zinc-300 mt-1 font-semibold">Valorant / R6</div>
+                    </div>
+                    <div className="p-4 rounded-2xl bg-black/90 border border-purple-900/40">
+                      <div className="text-zinc-400 text-xs font-mono mb-1">Commits</div>
+                      <div className="text-2xl font-black text-purple-400 font-mono">2,400+</div>
+                      <div className="text-[11px] text-purple-300 mt-1 font-semibold">Git Activity</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* 2. GAMING WIDGET */}
+              <div className="col-span-1 md:col-span-3 lg:col-span-2 glass-card-dark glass-card-dark-hover rounded-3xl p-6 flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-2xl bg-red-950 border border-red-500/40 flex items-center justify-center">
+                        <i data-lucide="gamepad-2" class="w-5 h-5 text-red-500"></i>
+                      </div>
+                      <div>
+                        <h2 className="font-extrabold text-lg text-white">Gaming HQ</h2>
+                        <p className="text-xs text-zinc-400">Favori Rekabetçi Oyunlar</p>
+                      </div>
+                    </div>
+                    <span className="px-2.5 py-1 rounded-full bg-red-950 text-red-400 text-xs font-mono font-bold border border-red-800">RANKED ELO</span>
+                  </div>
+
+                  <div className="grid grid-cols-3 gap-2 p-1.5 rounded-2xl bg-black border border-purple-900/30 mb-4">
+                    <button onClick={() => setSelectedGame('valorant')} className={`py-2 text-xs font-bold rounded-xl transition-all ${selectedGame === 'valorant' ? 'bg-gradient-to-r from-red-600 to-rose-600 text-white shadow-lg' : 'text-zinc-400'}`}>Valorant</button>
+                    <button onClick={() => setSelectedGame('r6')} className={`py-2 text-xs font-bold rounded-xl transition-all ${selectedGame === 'r6' ? 'bg-gradient-to-r from-amber-600 to-red-600 text-white shadow-lg' : 'text-zinc-400'}`}>R6 Siege</button>
+                    <button onClick={() => setSelectedGame('rocket')} className={`py-2 text-xs font-bold rounded-xl transition-all ${selectedGame === 'rocket' ? 'bg-gradient-to-r from-purple-600 to-red-600 text-white shadow-lg' : 'text-zinc-400'}`}>Rocket League</button>
+                  </div>
+
+                  <div className="p-4 rounded-2xl bg-black/90 border border-red-900/40 space-y-3">
+                    <div className="flex justify-between items-center">
+                      <div>
+                        <div className="text-white font-black text-base">{currentGame.name}</div>
+                        <div className="text-xs text-red-400 font-bold">{currentGame.rank}</div>
+                      </div>
+                      <span className="px-2.5 py-1 rounded-full bg-red-950 border border-red-500/40 text-red-400 text-xs font-mono font-bold">● LIVE</span>
+                    </div>
+
+                    <div className="pt-2 border-t border-white/5 font-mono text-xs">
+                      <div className="flex justify-between text-zinc-400 mb-1">
+                        <span>Win Rate</span>
+                        <span className="text-emerald-400 font-bold">%{currentGame.winrate}</span>
+                      </div>
+                      <div className="w-full h-2 bg-zinc-900 rounded-full overflow-hidden mb-2">
+                        <div className="h-full bg-gradient-to-r from-red-600 to-rose-500 rounded-full" style={{ width: `${currentGame.winrate}%` }}></div>
+                      </div>
+                    </div>
+
+                    <div className="text-[11px] font-mono text-zinc-300 bg-red-950/40 p-2 rounded-xl border border-red-900/30 truncate">
+                      <span className="text-red-500 font-bold">FEED: </span>{currentGame.feed}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-4 pt-3 border-t border-white/5 flex justify-between text-xs text-zinc-500 font-mono">
+                  <span>Tag: Metin#TURK</span>
+                  <span className="text-red-400 font-bold">Top Regional Elo</span>
+                </div>
+              </div>
+
+              {/* 3. VOLLEYBALL WIDGET */}
+              <div className="col-span-1 md:col-span-3 lg:col-span-2 glass-card-dark glass-card-dark-hover rounded-3xl p-6 flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-red-900 to-purple-950 border border-red-500/30 flex items-center justify-center text-xl">
+                        🏐
+                      </div>
+                      <div>
+                        <h2 className="font-extrabold text-lg text-white">Voleybol & Spor</h2>
+                        <p className="text-xs text-zinc-400">Lisanslı Profesyonel Sporcu</p>
+                      </div>
+                    </div>
+                    <span className="px-3 py-1 rounded-full bg-red-950 border border-red-500/40 text-red-300 text-xs font-mono font-bold">Lisanslı</span>
+                  </div>
+
+                  <div className="p-4 rounded-2xl bg-gradient-to-r from-red-950/60 via-[#180a1d] to-black border border-red-500/30 mb-4 flex justify-between items-center">
+                    <div>
+                      <div className="text-xs text-red-400 font-bold uppercase font-mono">Pozisyon</div>
+                      <div className="text-xl font-black text-white">Pasör / Smaçör</div>
+                      <div className="text-xs text-zinc-400">Selçuk Üniversitesi Takımı</div>
+                    </div>
+                    <div className="text-right font-mono">
+                      <div className="text-xs text-zinc-500">Forma</div>
+                      <div className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-rose-400">#7</div>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-4 gap-2 text-center font-mono">
+                    <div className="p-2.5 rounded-xl bg-black/90 border border-red-900/30">
+                      <div className="text-[10px] text-zinc-500">Sıçrama</div>
+                      <div className="text-xs font-black text-red-500">335 cm</div>
+                    </div>
+                    <div className="p-2.5 rounded-xl bg-black/90 border border-purple-900/30">
+                      <div className="text-[10px] text-zinc-500">Blok</div>
+                      <div className="text-xs font-black text-purple-400">320 cm</div>
+                    </div>
+                    <div className="p-2.5 rounded-xl bg-black/90 border border-red-900/30">
+                      <div className="text-[10px] text-zinc-500">Maç</div>
+                      <div className="text-xs font-black text-rose-400">150+</div>
+                    </div>
+                    <div className="p-2.5 rounded-xl bg-black/90 border border-purple-900/30">
+                      <div className="text-[10px] text-zinc-500">Galibiyet</div>
+                      <div className="text-xs font-black text-purple-300">%78</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-4 pt-3 border-t border-white/5 flex justify-between text-xs text-zinc-500 font-mono">
+                  <span>Branş: Erkek Voleybol</span>
+                  <span className="text-red-400 font-bold">Sezon 2026</span>
+                </div>
+              </div>
+
+              {/* 4. MUSIC WIDGET */}
+              <div className="col-span-1 md:col-span-3 lg:col-span-2 glass-card-dark glass-card-dark-hover rounded-3xl p-6 flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-2xl bg-red-950 border border-red-500/40 flex items-center justify-center">
+                        <i data-lucide="radio" class="w-5 h-5 text-red-500"></i>
+                      </div>
+                      <div>
+                        <h2 className="font-extrabold text-lg text-white flex items-center gap-1.5">
+                          Spotify <span className="w-2 h-2 rounded-full bg-red-500 animate-ping"></span>
+                        </h2>
+                        <p className="text-xs text-zinc-400">Şu An Dinleniyor</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-end gap-1 h-6 px-2.5 py-1 rounded-lg bg-black border border-red-900/40">
+                      <div className="w-1 bg-red-500 wave-bar-red" style={{ animationDelay: '0s' }}></div>
+                      <div className="w-1 bg-purple-500 wave-bar-purple" style={{ animationDelay: '0.2s' }}></div>
+                      <div className="w-1 bg-red-500 wave-bar-red" style={{ animationDelay: '0.4s' }}></div>
+                      <div className="w-1 bg-purple-500 wave-bar-purple" style={{ animationDelay: '0.1s' }}></div>
+                      <div className="w-1 bg-red-500 wave-bar-red" style={{ animationDelay: '0.3s' }}></div>
+                    </div>
+                  </div>
+
+                  <div className="p-4 rounded-2xl bg-black/90 border border-purple-900/30 flex items-center gap-4 mb-3">
+                    <div className="w-14 h-14 rounded-xl bg-gradient-to-tr from-red-600 via-rose-700 to-black p-1 flex items-center justify-center shrink-0 shadow-lg border border-red-500/30">
+                      <i data-lucide="disc" class="w-7 h-7 text-red-400"></i>
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-black text-white text-base truncate">Starboy</h3>
+                      <p className="text-xs text-zinc-400 truncate">The Weeknd, Daft Punk</p>
+                      <p className="text-[11px] text-zinc-500 truncate">Starboy Album</p>
+                    </div>
+                  </div>
+
+                  <div className="p-2 px-3 rounded-xl bg-red-950/40 border border-red-900/30 mb-3 text-xs font-mono text-red-300 truncate">
+                    ♪ I'm tryna put you in the worst mood, ah...
+                  </div>
+
+                  <div className="space-y-1 font-mono">
+                    <div className="w-full h-2 bg-zinc-900 rounded-full overflow-hidden">
+                      <div className="h-full bg-gradient-to-r from-red-600 to-purple-500 transition-all duration-300" style={{ width: `${(trackProgress / 230) * 100}%` }}></div>
+                    </div>
+                    <div className="flex justify-between text-[10px] text-zinc-500">
+                      <span>{Math.floor(trackProgress / 60)}:{('0' + Math.floor(trackProgress % 60)).slice(-2)}</span>
+                      <span>3:50</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-4 pt-3 border-t border-white/5 flex justify-between text-xs text-zinc-500 font-mono">
+                  <span>Playlist: Crimson Favorites</span>
+                  <span className="text-red-400 font-bold">FLAC 24-bit HQ</span>
+                </div>
+              </div>
+
+              {/* 5. TECH STACK WIDGET */}
+              <div className="col-span-1 md:col-span-3 lg:col-span-2 glass-card-dark glass-card-dark-hover rounded-3xl p-6 flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-2xl bg-purple-950 border border-purple-500/40 flex items-center justify-center">
+                        <i data-lucide="code" class="w-5 h-5 text-purple-400"></i>
+                      </div>
+                      <div>
+                        <h2 className="font-extrabold text-lg text-white">Yetenekler & Stack</h2>
+                        <p className="text-xs text-zinc-400">Mühendislik & Kodlama</p>
+                      </div>
+                    </div>
+                    <span className="px-3 py-1 rounded-full bg-red-950 border border-red-500/40 text-red-300 text-xs font-mono font-bold">Antigravity AI</span>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2 font-mono">
+                    <div className="p-2.5 rounded-xl bg-black/90 border border-purple-900/30 flex items-center gap-2">
+                      <span>⚛️</span>
+                      <div>
+                        <div className="text-xs font-bold text-white">React.js</div>
+                        <div className="text-[10px] text-purple-400">Ileri Level %90</div>
+                      </div>
+                    </div>
+                    <div className="p-2.5 rounded-xl bg-black/90 border border-red-900/30 flex items-center gap-2">
+                      <span>🎨</span>
+                      <div>
+                        <div className="text-xs font-bold text-white">Tailwind CSS</div>
+                        <div className="text-[10px] text-red-400">Ileri Level %95</div>
+                      </div>
+                    </div>
+                    <div className="p-2.5 rounded-xl bg-black/90 border border-purple-900/30 flex items-center gap-2">
+                      <span>💻</span>
+                      <div>
+                        <div className="text-xs font-bold text-white">C / C++</div>
+                        <div className="text-[10px] text-purple-400">Orta-Ileri %85</div>
+                      </div>
+                    </div>
+                    <div className="p-2.5 rounded-xl bg-black/90 border border-red-900/30 flex items-center gap-2">
+                      <span>🚀</span>
+                      <div>
+                        <div className="text-xs font-bold text-white">Antigravity AI</div>
+                        <div className="text-[10px] text-red-400">Specialist %98</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-4 pt-3 border-t border-white/5 flex justify-between text-xs text-zinc-500 font-mono">
+                  <span>Selçuk Üni Müfredat</span>
+                  <span className="text-red-400 font-bold">Continuous Mastery</span>
+                </div>
+              </div>
+
+              {/* 6. CONTACT SECTION */}
+              <div id="contact" className="col-span-1 md:col-span-3 lg:col-span-4 glass-card-dark glass-card-dark-hover rounded-3xl p-6 sm:p-8">
+                <div className="flex flex-col md:flex-row items-center justify-between gap-6 pb-6 border-b border-white/10">
+                  <div>
+                    <h2 className="text-2xl font-black text-white flex items-center gap-2">
+                      İletişime Geçin <i data-lucide="sparkles" class="w-5 h-5 text-red-500"></i>
+                    </h2>
+                    <p className="text-sm text-zinc-400 mt-1">Yazılım projeleri, voleybol maçları veya oyun takımları için bağlantı kurabilirsiniz.</p>
+                  </div>
+                  <button onClick={handleCopyEmail} className="px-5 py-3 rounded-2xl bg-black hover:bg-zinc-900 border border-red-500/40 text-white font-medium text-xs sm:text-sm flex items-center gap-2 shadow-lg">
+                    <i data-lucide="mail" class="w-4 h-4 text-red-500"></i>
+                    <span className="font-mono">metin.compeng@selcuk.edu.tr</span>
+                    <span className="text-xs text-red-400 font-bold ml-2">{copied ? '✓ Kopyalandı!' : '📋 Kopyala'}</span>
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 py-6">
+                  <a href="https://github.com" target="_blank" className="p-4 rounded-2xl bg-black/90 border border-purple-900/30 hover:border-red-500/50 flex items-center gap-3">
+                    <i data-lucide="github" class="w-5 h-5 text-red-500"></i>
+                    <div>
+                      <div className="font-bold text-sm text-white">GitHub</div>
+                      <div className="text-[11px] text-zinc-500">@metin-dev</div>
+                    </div>
+                  </a>
+                  <a href="https://linkedin.com" target="_blank" className="p-4 rounded-2xl bg-black/90 border border-purple-900/30 hover:border-purple-500/50 flex items-center gap-3">
+                    <i data-lucide="linkedin" class="w-5 h-5 text-purple-400"></i>
+                    <div>
+                      <div className="font-bold text-sm text-white">LinkedIn</div>
+                      <div className="text-[11px] text-zinc-500">Metin • Comp Eng</div>
+                    </div>
+                  </a>
+                  <a href="https://instagram.com" target="_blank" className="p-4 rounded-2xl bg-black/90 border border-purple-900/30 hover:border-rose-500/50 flex items-center gap-3">
+                    <i data-lucide="instagram" class="w-5 h-5 text-rose-500"></i>
+                    <div>
+                      <div className="font-bold text-sm text-white">Instagram</div>
+                      <div className="text-[11px] text-zinc-500">@metin.athlete</div>
+                    </div>
+                  </a>
+                  <a href="https://discord.com" target="_blank" className="p-4 rounded-2xl bg-black/90 border border-purple-900/30 hover:border-indigo-500/50 flex items-center gap-3">
+                    <i data-lucide="message-square" class="w-5 h-5 text-indigo-400"></i>
+                    <div>
+                      <div className="font-bold text-sm text-white">Discord</div>
+                      <div className="text-[11px] text-zinc-500">Metin#0001</div>
+                    </div>
+                  </a>
+                </div>
+
+                <div className="pt-4 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between text-xs text-zinc-500 font-mono gap-2">
+                  <div>© 2026 Metin • Selçuk Üniversitesi Bilgisayar Mühendisliği</div>
+                  <div className="text-[11px]">Designed & Built for Metin</div>
+                </div>
+              </div>
+
+            </main>
+          </div>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>

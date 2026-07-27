@@ -1,0 +1,60 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    background-color: #040407;
+    color: #f4f4f5;
+  }
+}
+
+/* Custom Red-Purple Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #06040a;
+}
+::-webkit-scrollbar-thumb {
+  background: #3b0724;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #e11d48;
+}
+
+/* Dark Black-Purple Glassmorphism */
+.glass-card-dark {
+  background: rgba(12, 9, 20, 0.75);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(168, 85, 247, 0.15);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.6);
+}
+
+.glass-card-dark-hover {
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.glass-card-dark-hover:hover {
+  border-color: rgba(244, 63, 94, 0.45);
+  box-shadow: 0 12px 40px -10px rgba(225, 29, 72, 0.25), 0 0 20px rgba(168, 85, 247, 0.15);
+  transform: translateY(-3px);
+}
+
+/* Grid background pattern with subtle purple grid lines */
+.bg-grid-purple {
+  background-size: 36px 36px;
+  background-image: 
+    linear-gradient(to right, rgba(168, 85, 247, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(225, 29, 72, 0.04) 1px, transparent 1px);
+}
+
+@keyframes scanline {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(1000%); }
+}
+
+.scanline {
+  animation: scanline 8s linear infinite;
+}
