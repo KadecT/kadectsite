@@ -19,7 +19,7 @@ export const HeroSection = () => {
         <div className="lg:col-span-8 space-y-5">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-zinc-800/80 border border-zinc-700/60 text-xs font-mono text-cyan-400 backdrop-blur-md">
             <Terminal className="w-3.5 h-3.5 text-cyan-400 animate-pulse" />
-            <span>sys.init("Metin_Portfolio_v2.0")</span>
+            <span>sys.init("whoiskadect")</span>
           </div>
 
           <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white leading-tight">
